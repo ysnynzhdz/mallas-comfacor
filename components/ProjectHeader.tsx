@@ -8,6 +8,7 @@ export function ProjectHeader({
   period,
   year,
   version,
+  subject,
 }: {
   snap: Snapshot;
   area: string;
@@ -16,12 +17,14 @@ export function ProjectHeader({
   period: number;
   year: number;
   version?: number;
+  subject?: string;
 }) {
   const fields = snap.header_fields.filter((f) => f.value?.trim() || f.label?.trim());
   return (
     <section className="tarjeta mb-6 border-t-8" style={{ borderTopColor: areaColor }}>
       <div className="mb-3 flex flex-wrap gap-2 text-sm">
         <span className="rounded-full bg-institucional-claro px-3 py-1 font-semibold text-institucional">{area}</span>
+        {subject && <span className="rounded-full bg-institucional-claro px-3 py-1 font-semibold text-institucional">{subject}</span>}
         <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold">{grade}</span>
         <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold">Período {period}</span>
         <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold">Vigencia {year}</span>

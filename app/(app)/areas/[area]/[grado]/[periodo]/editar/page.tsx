@@ -14,12 +14,12 @@ export default async function EditarPage({
   searchParams,
 }: {
   params: Promise<{ area: string; grado: string; periodo: string }>;
-  searchParams: Promise<{ vigencia?: string }>;
+  searchParams: Promise<{ vigencia?: string; asignatura?: string }>;
 }) {
   const { profile } = await requireUser();
   const { area: a, grado, periodo } = await params;
-  const { vigencia } = await searchParams;
-  const { area, year, plan, grade, period, project, vq } = await resolveProject(a, grado, periodo, vigencia);
+  const { vigencia, asignatura } = await searchParams;
+  const { area, year, plan, grade, period, project, vqp: vq } = await resolveProject(a, grado, periodo, vigencia, asignatura);
   if (!project || !plan) notFound();
   const viewHref = `/areas/${area.slug}/${grade.slug}/${period.number}${vq}`;
   const published = plan.status === "publicada" || plan.status === "requiere_actualizacion";

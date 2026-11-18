@@ -1,0 +1,21 @@
+{
+ "_nota": "Nombres propuestos a partir del contenido de cada unidad, porque el documento original no trae nombre. La plataforma los marca como 'propuestos'.",
+ "1. Inglés": {"septimo|3": "Narrando el pasado (verbo to be en pasado, pasado simple y continuo, used to)"},
+ "4. Cátedra de la paz": {
+   "transicion|1": "¿Quién soy? Me reconozco y reconozco a los demás",
+   "transicion|2": "Conozco mis emociones",
+   "transicion|3": "Me calmo y convivo con los demás",
+   "cuarto|1": "Asertividad frente al acoso escolar"},
+ "7. Lengua Castellana": {
+   "decimo|1": "Tipología textual, el ensayo y la literatura medieval española",
+   "decimo|2": "Renacimiento y Barroco, la reseña crítica y los medios de comunicación",
+   "decimo|3": "La exposición oral, la literatura española de la Ilustración al Realismo y el trabajo escrito",
+   "undecimo|1": "Tipología textual, comprensión lectora y literatura clásica, medieval y renacentista",
+   "undecimo|2": "Del Barroco al Realismo y el ensayo argumentativo",
+   "undecimo|3": "Simbolismo, vanguardias, literatura contemporánea y el trabajo escrito"},
+ "9. Matemáticas": {
+   "primero|1": "Números hasta el 10, nociones espaciales, figuras planas y tablas de datos",
+   "primero|2": "Números hasta el 500, adición y sustracción, medidas y pictogramas",
+   "primero|3": "Números hasta el 999, desplazamientos y noción de probabilidad",
+   "segundo|3": "Multiplicación y división, perímetro y área, y noción de probabilidad"}
+}

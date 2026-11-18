@@ -13,7 +13,7 @@ export default async function GradoPage({
 }) {
   const { area: slug, grado } = await params;
   const { vigencia } = await searchParams;
-  const { area, year, projects, vq } = await resolveArea(slug, vigencia);
+  const { area, year, projects, subjects, vq } = await resolveArea(slug, vigencia);
   const grade = await getGradeBySlug(grado);
   if (!grade) notFound();
   const periods = await getPeriods();
@@ -29,7 +29,29 @@ export default async function GradoPage({
       <p className="mb-6 text-slate-600">Vigencia {year.year}. Elija un período.</p>
       <ul className="grid gap-4 md:grid-cols-3">
         {periods.map((pe) => {
-          const p = projects.find((x) => x.grade_id === grade.id && x.period_id === pe.id);
+          const all = projects
+            .filter((x) => x.grade_id === grade.id && x.period_id === pe.id)
+            .sort((a, b) => (subjects.find((s) => s.id === a.subject_id)?.sort_order ?? -1) - (subjects.find((s) => s.id === b.subject_id)?.sort_order ?? -1));
+          const p = all[0];
+          if (all.length > 1) {
+            return (
+              <li key={pe.id} className="flex h-full flex-col gap-2 rounded-xl border-t-8 bg-white p-5 shadow-sm" style={{ borderTopColor: area.color }}>
+                <span className="text-sm font-bold uppercase text-slate-500">{pe.name}</span>
+                {all.map((x) => {
+                  const sub = subjects.find((s) => s.id === x.subject_id);
+                  const q = new URLSearchParams();
+                  if (vigencia) q.set("vigencia", String(year.year));
+                  if (x.subject_id) q.set("asignatura", x.subject_id);
+                  return (
+                    <Link key={x.id} href={`/areas/${area.slug}/${grade.slug}/${pe.number}?${q}`} className="rounded-lg bg-slate-50 p-2 hover:bg-institucional-claro">
+                      <span className="block text-xs font-bold uppercase text-institucional">{sub?.name ?? "General"}</span>
+                      <span className="text-sm font-semibold leading-snug">{x.name || "(Sin nombre en el documento)"}</span>
+                    </Link>
+                  );
+                })}
+              </li>
+            );
+          }
           return (
             <li key={pe.id}>
               {p ? (

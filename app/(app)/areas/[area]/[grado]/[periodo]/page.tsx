@@ -13,12 +13,12 @@ export default async function PeriodoPage({
   searchParams,
 }: {
   params: Promise<{ area: string; grado: string; periodo: string }>;
-  searchParams: Promise<{ vigencia?: string; guardado?: string }>;
+  searchParams: Promise<{ vigencia?: string; asignatura?: string; guardado?: string }>;
 }) {
   const { profile } = await requireUser();
   const { area: a, grado, periodo } = await params;
   const sp = await searchParams;
-  const { area, year, plan, grade, period, project, vq } = await resolveProject(a, grado, periodo, sp.vigencia);
+  const { area, year, plan, grade, period, project, subject, tabs, vqp: vq } = await resolveProject(a, grado, periodo, sp.vigencia, sp.asignatura);
   const base = `/areas/${area.slug}/${grade.slug}`;
   const crumbs = [
     { href: "/inicio", label: "Inicio" },
@@ -71,8 +71,29 @@ export default async function PeriodoPage({
           Vista previa para el administrador: esta malla aún no está publicada (<StatusBadge plan={plan.status} />). Los docentes no la ven.
         </p>
       )}
+      {tabs.length > 1 && (
+        <nav aria-label="Asignaturas" className="mb-4 flex flex-wrap gap-2">
+          {tabs.map((t) => (
+            <Link
+              key={t.id}
+              href={`${base}/${period.number}${t.query}`}
+              aria-current={t.active ? "page" : undefined}
+              className={t.active ? "btn-institucional" : "btn-secundario"}
+            >
+              {t.label}
+            </Link>
+          ))}
+        </nav>
+      )}
+      {project.name_is_proposed && (
+        <p className="mb-4 rounded-lg bg-sky-50 p-3 text-sm text-sky-900">
+          ℹ️ El documento original no traía nombre para esta unidad. El nombre que aparece fue <strong>propuesto</strong> a partir de su
+          contenido durante la revisión; puede cambiarse con una solicitud.
+        </p>
+      )}
       <ProjectHeader
         snap={snap}
+        subject={subject?.name}
         area={area.name}
         areaColor={area.color}
         grade={grade.name}

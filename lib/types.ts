@@ -34,6 +34,8 @@ export type Project = {
   plan_id: string;
   grade_id: string;
   period_id: string;
+  subject_id: string | null;
+  name_is_proposed: boolean;
   label: string;
   number_text: string;
   name: string;
@@ -76,3 +78,5 @@ export const REQUEST_STATUS_LABEL: Record<RequestStatus, string> = {
   aprobado: "Aprobada",
   rechazado: "Rechazada",
 };
+
+export type Subject = { id: string; area_id: string; name: string; sort_order: number };

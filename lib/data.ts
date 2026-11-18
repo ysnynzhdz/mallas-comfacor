@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import type { AcademicYear, Area, Grade, Period, Plan, Project, RowSnap, Snapshot } from "@/lib/types";
+import type { AcademicYear, Area, Grade, Period, Plan, Project, RowSnap, Snapshot, Subject } from "@/lib/types";
 
 export const getAreas = cache(async (): Promise<Area[]> => {
   const s = await createClient();
@@ -57,7 +57,7 @@ export const getProjectsOfPlan = cache(async (planId: string): Promise<Project[]
   const s = await createClient();
   const { data } = await s
     .from("projects")
-    .select("id, plan_id, grade_id, period_id, label, number_text, name, purpose_label, purpose, header_fields, columns, version_no, updated_at")
+    .select("id, plan_id, grade_id, period_id, subject_id, name_is_proposed, label, number_text, name, purpose_label, purpose, header_fields, columns, version_no, updated_at")
     .eq("plan_id", planId);
   return (data ?? []) as Project[];
 });
@@ -90,3 +90,9 @@ export async function unreadCount(): Promise<number> {
   const { count } = await s.from("notifications").select("id", { count: "exact", head: true }).is("read_at", null);
   return count ?? 0;
 }
+
+export const getSubjectsOfArea = cache(async (areaId: string): Promise<Subject[]> => {
+  const s = await createClient();
+  const { data } = await s.from("subjects").select("id, area_id, name, sort_order").eq("area_id", areaId).order("sort_order");
+  return (data ?? []) as Subject[];
+});

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { adminClientOrNull } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/auth";
+import { IMPORTACIONES } from "@/lib/importaciones";
 
 export type ActionState = { error?: string; ok?: string };
 const friendly = (m: string) => m.replace(/^.*?ERROR:\s*/, "");
@@ -49,13 +50,12 @@ export async function restaurarVersion(formData: FormData) {
 export async function cargarImportacion(_: ActionState, formData: FormData): Promise<ActionState> {
   await requireAdmin();
   const file = String(formData.get("archivo"));
-  const known: Record<string, { area: string; year: number; load: () => Promise<unknown> }> = {
-    "matematicas-2024": { area: "matematicas", year: 2024, load: async () => (await import("@/data/importaciones/matematicas-2024.json")).default },
-  };
-  const k = known[file];
+  const k = IMPORTACIONES.find((x) => x.id === file);
   if (!k) return { error: "Archivo de importación no reconocido." };
+  const reemplazar = formData.get("reemplazar") === "1";
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("import_plan", { p_area_slug: k.area, p_year: k.year, d: await k.load() });
+  const d = (await import(`@/data/importaciones/${k.id}.json`)).default;
+  const { data, error } = await supabase.rpc("import_plan", { p_area_slug: k.area, p_year: k.year, d, p_replace: reemplazar });
   if (error) return { error: friendly(error.message) };
   revalidatePath("/", "layout");
   redirect(`/admin/importaciones/${data}`);

@@ -29,8 +29,21 @@ export default async function RevisarImportacion({
   const { data: planData } = await s.from("curriculum_plans").select("*, year:academic_years(year)").eq("id", planId).maybeSingle();
   if (!planData) notFound();
   const plan = planData as Plan & { year: { year: number } };
-  const { data: jobData } = await s.from("import_jobs").select("summary, alerts, source:document_sources(file_name, sha256)").eq("plan_id", planId).maybeSingle();
-  const job = jobData as unknown as { summary: Record<string, unknown>; alerts: { nivel: string; ubicacion: string; mensaje: string }[]; source: { file_name: string; sha256: string } } | null;
+  const { data: jobData } = await s.from("import_jobs").select("summary, alerts, corrections, source:document_sources(file_name, sha256)").eq("plan_id", planId).maybeSingle();
+  const job = jobData as unknown as {
+    summary: Record<string, unknown>;
+    alerts: { nivel: string; ubicacion: string; mensaje: string }[];
+    corrections: {
+      ortografia?: { antes: string; despues: string; veces: number; ubicaciones?: string[] }[];
+      estructura?: { tipo: string; ubicacion: string; antes: string; despues: string }[];
+    };
+    source: { file_name: string; sha256: string };
+  } | null;
+  const { data: subjData } = await s.from("subjects").select("id, name").eq("area_id", plan.area_id);
+  const subjName = (id: string | null) => (id ? ((subjData ?? []).find((x) => x.id === id)?.name ?? "") : "");
+  const orto = job?.corrections?.ortografia ?? [];
+  const estr = job?.corrections?.estructura ?? [];
+  const TIPO: Record<string, string> = { limpieza_nombre: "Nombre de unidad limpiado", nombre_propuesto: "Nombre propuesto (no tenía)", sin_nombre: "Sigue sin nombre" };
   const [areas, grades, periods, projects] = await Promise.all([getAreas(), getGrades(), getPeriods(), getProjectsOfPlan(planId)]);
   const area = areas.find((a) => a.id === plan.area_id)!;
   const published = plan.status === "publicada";
@@ -65,13 +78,21 @@ export default async function RevisarImportacion({
               <tr key={g.id} className="border-t border-slate-100">
                 <td className="p-2 font-semibold">{g.name}</td>
                 {periods.map((pe) => {
-                  const p = projects.find((x) => x.grade_id === g.id && x.period_id === pe.id);
+                  const list = projects.filter((x) => x.grade_id === g.id && x.period_id === pe.id);
                   return (
                     <td key={pe.id} className="p-2 align-top">
-                      {p ? (
-                        <Link href={`/areas/${area.slug}/${g.slug}/${pe.number}${vq}`} className="text-institucional hover:underline">
-                          {p.label} {p.number_text}: {p.name || <em className="text-amber-700">sin nombre</em>}
-                        </Link>
+                      {list.length ? (
+                        list.map((p) => (
+                          <Link
+                            key={p.id}
+                            href={`/areas/${area.slug}/${g.slug}/${pe.number}${vq}${p.subject_id ? `&asignatura=${p.subject_id}` : ""}`}
+                            className="mb-1 block text-institucional hover:underline"
+                          >
+                            {subjName(p.subject_id) && <strong>{subjName(p.subject_id)} · </strong>}
+                            {p.label} {p.number_text}: {p.name || <em className="text-amber-700">sin nombre</em>}
+                            {p.name_is_proposed && <em className="ml-1 text-sky-700">(nombre propuesto)</em>}
+                          </Link>
+                        ))
                       ) : (
                         <span className="text-slate-400">—</span>
                       )}
@@ -103,6 +124,42 @@ export default async function RevisarImportacion({
             </li>
           ))}
       </ul>
+
+      <h2 className="mb-2 text-lg font-bold">Correcciones aplicadas en la plataforma</h2>
+      <p className="mb-3 text-sm text-slate-600">
+        El documento Word original no se modificó. En la plataforma se corrigieron solo errores evidentes de ortografía y tildes, y la
+        estructura de los nombres de unidad. Cada cambio queda aquí para su revisión.
+      </p>
+      <details className="tarjeta mb-3">
+        <summary className="cursor-pointer font-semibold">Ortografía y tildes: {orto.reduce((n, c) => n + (c.veces ?? 1), 0)} cambios ({orto.length} palabras distintas)</summary>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-100"><tr><th className="p-2 text-left">Antes</th><th className="p-2 text-left">Después</th><th className="p-2 text-left">Veces</th><th className="p-2 text-left">Dónde</th></tr></thead>
+            <tbody>
+              {orto.map((c, i) => (
+                <tr key={i} className="border-t border-slate-100 align-top">
+                  <td className="p-2 text-red-800 line-through">{c.antes}</td>
+                  <td className="p-2 font-semibold text-green-800">{c.despues}</td>
+                  <td className="p-2">{c.veces}</td>
+                  <td className="p-2 text-slate-600">{(c.ubicaciones ?? []).slice(0, 4).join("; ")}{(c.ubicaciones ?? []).length > 4 ? " …" : ""}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </details>
+      <details className="tarjeta mb-6">
+        <summary className="cursor-pointer font-semibold">Estructura (nombres de unidad): {estr.length} cambios</summary>
+        <ul className="mt-3 space-y-2 text-sm">
+          {estr.map((c, i) => (
+            <li key={i} className="rounded-lg bg-slate-50 p-2">
+              <strong>{TIPO[c.tipo] ?? c.tipo}</strong> · {c.ubicacion}
+              {c.antes && <> · antes: <span className="text-red-800">«{c.antes}»</span></>}
+              {c.despues && <> · ahora: <span className="font-semibold text-green-800">«{c.despues}»</span></>}
+            </li>
+          ))}
+        </ul>
+      </details>
 
       <p className="mb-6"><Link href={`/areas/${area.slug}/informacion${vq}`} className="btn-secundario">Ver información general importada</Link></p>
 

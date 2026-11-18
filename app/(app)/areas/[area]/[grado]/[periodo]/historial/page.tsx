@@ -15,12 +15,12 @@ export default async function Historial({
   searchParams,
 }: {
   params: Promise<{ area: string; grado: string; periodo: string }>;
-  searchParams: Promise<{ vigencia?: string; restaurada?: string; error?: string }>;
+  searchParams: Promise<{ vigencia?: string; asignatura?: string; restaurada?: string; error?: string }>;
 }) {
   const { profile } = await requireUser();
   const { area: a, grado, periodo } = await params;
   const sp = await searchParams;
-  const { area, grade, period, project, vq } = await resolveProject(a, grado, periodo, sp.vigencia);
+  const { area, grade, period, project, vqp: vq } = await resolveProject(a, grado, periodo, sp.vigencia, sp.asignatura);
   if (!project) notFound();
   const s = await createClient();
   const { data } = await s
