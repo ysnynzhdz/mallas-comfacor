@@ -7,6 +7,7 @@ import { requireUser, editableAreaIds } from "@/lib/auth";
 import { getRows, toSnapshot } from "@/lib/data";
 import { resolveProject } from "@/lib/context";
 import { createClient } from "@/lib/supabase/server";
+import { Descargas } from "@/components/Descargas";
 
 export default async function PeriodoPage({
   params,
@@ -130,6 +131,12 @@ export default async function PeriodoPage({
         </p>
       )}
       <CurriculumTable columns={snap.columns} rows={snap.rows} />
+      <div className="mt-4">
+        <Descargas
+          label="esta unidad"
+          query={{ area: area.slug, grado: grade.slug, periodo: String(period.number), asignatura: subject?.id, vigencia: String(year.year) }}
+        />
+      </div>
     </div>
   );
 }

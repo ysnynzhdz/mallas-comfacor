@@ -7,6 +7,9 @@ export function AppHeader({ profile, unread }: { profile: Profile; unread: numbe
   const isAdmin = profile.role === "admin";
   const links = [
     { href: "/inicio", label: "Inicio" },
+    { href: "/buscar", label: "Buscar" },
+    { href: "/grados", label: "Por grado" },
+    { href: "/comparar", label: "Comparar" },
     { href: "/mis-solicitudes", label: "Mis solicitudes" },
     ...(isAdmin
       ? [
@@ -14,6 +17,7 @@ export function AppHeader({ profile, unread }: { profile: Profile; unread: numbe
           { href: "/admin/solicitudes", label: "Solicitudes" },
           { href: "/admin/importaciones", label: "Importaciones" },
           { href: "/admin/docentes", label: "Docentes" },
+          { href: "/admin/vigencias", label: "Vigencias" },
         ]
       : []),
   ];

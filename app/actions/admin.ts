@@ -147,3 +147,27 @@ export async function restablecerClave(_: ActionState, formData: FormData): Prom
   if (error) return { error: error.message };
   return { ok: `Nueva contraseña temporal: ${password} — entréguela personalmente. No se volverá a mostrar.` };
 }
+
+// ---------- Vigencias ----------
+export async function duplicarVigencia(_: ActionState, formData: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const desde = Number(formData.get("desde"));
+  const hasta = Number(formData.get("hasta"));
+  if (!Number.isInteger(hasta) || hasta < 2000 || hasta > 2100) return { error: "Escriba un año válido para la nueva vigencia." };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("duplicate_year", { p_from: desde, p_to: hasta });
+  if (error) return { error: friendly(error.message) };
+  revalidatePath("/", "layout");
+  return { ok: `Listo: se copiaron ${data} área(s) a la vigencia ${hasta} como borrador. Revíselas y publíquelas desde Importaciones.` };
+}
+
+export async function activarVigencia(_: ActionState, formData: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const year = Number(formData.get("year"));
+  if (formData.get("confirmo") !== "1") return { error: "Marque la casilla para confirmar." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("set_current_year", { p_year: year });
+  if (error) return { error: friendly(error.message) };
+  revalidatePath("/", "layout");
+  return { ok: `La vigencia ${year} quedó como vigente.` };
+}

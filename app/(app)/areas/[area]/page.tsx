@@ -3,6 +3,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StatusBadge } from "@/components/StatusBadge";
 import { getGrades } from "@/lib/data";
 import { resolveArea } from "@/lib/context";
+import { Descargas } from "@/components/Descargas";
 
 export default async function AreaPage({
   params,
@@ -55,6 +56,9 @@ export default async function AreaPage({
               );
             })}
           </ul>
+          <div className="mt-6">
+            <Descargas label="el área completa (todos los grados)" query={{ area: area.slug, vigencia: String(year.year) }} />
+          </div>
           {plan.general_info?.length > 0 && (
             <p className="mt-6">
               <Link href={`/areas/${area.slug}/informacion${vq}`} className="btn-secundario">

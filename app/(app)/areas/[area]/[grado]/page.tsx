@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { getGradeBySlug, getPeriods } from "@/lib/data";
 import { resolveArea } from "@/lib/context";
+import { Descargas } from "@/components/Descargas";
 
 export default async function GradoPage({
   params,
@@ -26,7 +27,12 @@ export default async function GradoPage({
       <h1 className="mb-1 text-2xl font-bold">
         {area.name} · {grade.name}
       </h1>
-      <p className="mb-6 text-slate-600">Vigencia {year.year}. Elija un período.</p>
+      <p className="mb-3 text-slate-600">Vigencia {year.year}. Elija un período.</p>
+      {projects.some((x) => x.grade_id === grade.id) && (
+        <div className="mb-6">
+          <Descargas label={`los 3 períodos de ${grade.name}`} query={{ area: area.slug, grado: grade.slug, vigencia: String(year.year) }} />
+        </div>
+      )}
       <ul className="grid gap-4 md:grid-cols-3">
         {periods.map((pe) => {
           const all = projects

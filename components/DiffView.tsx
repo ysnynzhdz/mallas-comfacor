@@ -1,15 +1,15 @@
 import type { Snapshot } from "@/lib/types";
 import { diffSnapshots } from "@/lib/diff";
 
-function Cambio({ before, after }: { before: string; after: string }) {
+function Cambio({ before, after, l }: { before: string; after: string; l: { before: string; after: string } }) {
   return (
     <div className="grid gap-2 md:grid-cols-2">
       <div className="rounded-lg border border-red-200 bg-red-50 p-3">
-        <p className="mb-1 text-xs font-bold text-red-800">ANTES</p>
+        <p className="mb-1 text-xs font-bold text-red-800">{l.before}</p>
         <p className="texto-celda text-sm">{before || <span className="text-slate-400">(vacío)</span>}</p>
       </div>
       <div className="rounded-lg border border-green-200 bg-green-50 p-3">
-        <p className="mb-1 text-xs font-bold text-green-800">PROPUESTO</p>
+        <p className="mb-1 text-xs font-bold text-green-800">{l.after}</p>
         <p className="texto-celda text-sm">{after || <span className="text-slate-400">(vacío)</span>}</p>
       </div>
     </div>
@@ -17,7 +17,18 @@ function Cambio({ before, after }: { before: string; after: string }) {
 }
 
 /** Muestra lo anterior y lo propuesto, con colores: verde agregado, rojo eliminado, amarillo modificado. */
-export function DiffView({ before, after }: { before: Snapshot; after: Snapshot }) {
+export function DiffView({
+  before,
+  after,
+  beforeLabel = "ANTES",
+  afterLabel = "PROPUESTO",
+}: {
+  before: Snapshot;
+  after: Snapshot;
+  beforeLabel?: string;
+  afterLabel?: string;
+}) {
+  const l = { before: beforeLabel, after: afterLabel };
   const d = diffSnapshots(before, after);
   const label = (k: string) => d.columns.find((c) => c.key === k)?.label ?? k;
   const nothing = d.fields.length === 0 && d.counts.agregadas + d.counts.eliminadas + d.counts.modificadas === 0;
@@ -36,7 +47,7 @@ export function DiffView({ before, after }: { before: Snapshot; after: Snapshot 
       {d.fields.map((f, i) => (
         <section key={i} className="tarjeta border-l-8 border-l-amber-400">
           <h3 className="mb-2 font-bold">{f.label}</h3>
-          <Cambio before={f.before} after={f.after} />
+          <Cambio before={f.before} after={f.after} l={l} />
         </section>
       ))}
       {d.rows
@@ -58,7 +69,7 @@ export function DiffView({ before, after }: { before: Snapshot; after: Snapshot 
                 r.cells.map((c) => (
                   <div key={c.key} className="mb-3">
                     <p className="mb-1 text-sm font-bold text-institucional">{c.label}</p>
-                    <Cambio before={c.before} after={c.after} />
+                    <Cambio before={c.before} after={c.after} l={l} />
                   </div>
                 ))
               ) : (
