@@ -15,4 +15,4 @@ export const IMPORTACIONES = [
   ["etica-y-valores", "13. Ética"],
   ["religion", "14. Religión"],
   ["tecnologia-e-informatica", "15. Tecnología e Informática"],
-].map(([area, file]) => ({ id: `${area}-2024`, area, year: 2024, file: `${file}.docx` }));
+].map(([area, file]) => ({ id: `${area}-2024`, area, year: 2027, file: `${file}.docx` }));

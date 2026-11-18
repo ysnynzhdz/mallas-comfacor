@@ -27,7 +27,7 @@ export const getYears = cache(async (): Promise<AcademicYear[]> => {
   return (data ?? []) as AcademicYear[];
 });
 
-/** Vigencia elegida (?vigencia=2024) o la vigente más reciente. */
+/** Vigencia elegida (?vigencia=2027) o la vigente más reciente. */
 export async function resolveYear(param?: string | string[]): Promise<AcademicYear | null> {
   const years = await getYears();
   const wanted = Number(Array.isArray(param) ? param[0] : param);

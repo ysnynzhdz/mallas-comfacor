@@ -12,7 +12,7 @@ export default async function Cargar() {
   const { data: plans } = await s.from("curriculum_plans").select("area_id, status, year:academic_years(year)").is("subject_id", null);
   const estado = (slug: string) => {
     const a = areas.find((x) => x.slug === slug);
-    const p = (plans ?? []).find((x) => x.area_id === a?.id && (x.year as unknown as { year: number })?.year === 2024);
+    const p = (plans ?? []).find((x) => x.area_id === a?.id && (x.year as unknown as { year: number })?.year === 2027);
     return p ? (p.status === "importada" ? "ya cargada como borrador" : "ya publicada") : "pendiente";
   };
   return (
