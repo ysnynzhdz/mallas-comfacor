@@ -15,9 +15,9 @@ export function CurriculumTable({ columns, rows }: { columns: Column[]; rows: Ro
   return (
     <>
       {/* Computador y tableta */}
-      <div className="hidden max-h-[80vh] overflow-auto rounded-lg border border-linea bg-white md:block">
+      <div className="hidden overflow-x-auto rounded-lg border border-linea bg-white md:block">
         <table className="w-full border-collapse text-sm">
-          <thead className="condensada sticky top-0 z-10 bg-tinta text-white">
+          <thead className="condensada bg-tinta text-white">
             {hasGroups && (
               <tr>
                 {groups.map((g, i) =>

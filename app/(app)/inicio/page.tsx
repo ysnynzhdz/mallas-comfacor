@@ -17,7 +17,7 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
     <div>
       <section className="mb-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-end">
         <div>
-          <p className="mb-2 text-sm font-medium text-accion">Hola{first ? `, ${first}` : ""}</p>
+          {first && <p className="mb-2 text-sm font-medium text-accion">Hola, {first}</p>}
           <h1 className="text-3xl font-semibold leading-tight text-tinta md:text-4xl">Mallas curriculares {year?.year ?? ""}</h1>
           <p className="mt-2 max-w-xl text-slate-600">
             Elija un área para ver sus grados y períodos, o busque un tema en todas las mallas a la vez.
