@@ -8,7 +8,7 @@ import { fecha } from "@/lib/requests";
 import { restaurarVersion } from "@/app/actions/admin";
 import type { Snapshot } from "@/lib/types";
 
-const MOTIVO: Record<string, string> = { importacion: "Importación del documento original", aprobacion: "Solicitud aprobada", restauracion: "Restauración", duplicacion: "Copia de otra vigencia" };
+const MOTIVO: Record<string, string> = { importacion: "Importación del documento original", aprobacion: "Solicitud aprobada", restauracion: "Restauración", duplicacion: "Copia de otra vigencia", division: "División en asignaturas" };
 
 export default async function Historial({
   params,
