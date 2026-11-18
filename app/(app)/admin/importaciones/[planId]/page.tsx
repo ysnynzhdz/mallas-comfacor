@@ -43,7 +43,7 @@ export default async function RevisarImportacion({
   const subjName = (id: string | null) => (id ? ((subjData ?? []).find((x) => x.id === id)?.name ?? "") : "");
   const orto = job?.corrections?.ortografia ?? [];
   const estr = job?.corrections?.estructura ?? [];
-  const TIPO: Record<string, string> = { limpieza_nombre: "Nombre de unidad limpiado", nombre_propuesto: "Nombre propuesto (no tenía)", sin_nombre: "Sigue sin nombre" };
+  const TIPO: Record<string, string> = { limpieza_nombre: "Nombre de unidad limpiado", nombre_propuesto: "Nombre propuesto (no tenía)", sin_nombre: "Sigue sin nombre", nombre_reemplazado: "Nombre genérico reemplazado por uno propuesto" };
   const [areas, grades, periods, projects] = await Promise.all([getAreas(), getGrades(), getPeriods(), getProjectsOfPlan(planId)]);
   const area = areas.find((a) => a.id === plan.area_id)!;
   const published = plan.status === "publicada";

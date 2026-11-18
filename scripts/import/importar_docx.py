@@ -462,6 +462,16 @@ class Importer:
         if key in self.projects:
             old = self.projects[key]
             same = json.dumps(old["rows"], ensure_ascii=False) == json.dumps(proj["rows"], ensure_ascii=False)
+            # Decisión del administrador (2026-11-18): en estos casos la copia oficial es la SEGUNDA
+            pref = {("9. Matemáticas.docx", "jardin", 3)}
+            if not same and (os.path.basename(self.path), grade, period) in pref:
+                self.alert("advertencia", where, f"El grado {grade}, período {period} aparece dos veces en el documento con contenido distinto; "
+                           "por decisión del administrador se usa la segunda copia y la primera quedó en información general.")
+                self.dump_project(old, f"Primera copia {grade} P{period} ({old.get('source', '')})")
+                proj["grade"], proj["period"], proj["source"] = grade, period, where
+                if subject: proj["subject"] = subject
+                self.projects[key] = proj
+                return
             self.alert("error", where, f"El grado {grade}{' (' + subject + ')' if subject else ''}, período {period} aparece dos veces en el documento"
                        + (" con el mismo contenido; se conservó la primera." if same else " con contenido distinto; se conservó la primera y la segunda quedó en información general para revisión."))
             if not same:

@@ -19,6 +19,13 @@ for f in sorted(glob.glob(os.path.join(SRC, "*.json"))):
             log.append({"tipo": "limpieza_nombre", "ubicacion": where, "antes": n0.strip(), "despues": n})
         p["name"] = n; p["name_is_proposed"] = False
         k = f"{p['grade']}|{p['period']}"
+        ks = f"{k}|{p.get('subject') or ''}"
+        rep = prop.get("_reemplazar", {}).get(area, {})
+        if n and ks in rep:
+            p["header_fields"] = [{"label": "Título en el documento", "value": n}] + (p.get("header_fields") or [])
+            p["name"] = rep[ks]; p["name_is_proposed"] = True
+            log.append({"tipo": "nombre_reemplazado", "ubicacion": where, "antes": n, "despues": rep[ks]})
+            continue
         if not n and k in names:
             p["name"] = names[k]; p["name_is_proposed"] = True
             log.append({"tipo": "nombre_propuesto", "ubicacion": where, "antes": "", "despues": names[k]})

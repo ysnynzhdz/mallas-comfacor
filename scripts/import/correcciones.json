@@ -288,7 +288,8 @@
   "PATRONEES": "PATRONES",
   "DEMAS": "DEMÁS",
   "PAIS": "PAÍS",
-  "JESUS": "JESÚS"
+  "JESUS": "JESÚS",
+  "dios": "Dios"
  },
  "frases": {
   "l aciencia": "la ciencia",
@@ -311,6 +312,7 @@
   "importancia de maria": "importancia de María",
   "huerto del eden": "huerto del Edén",
   "el angel de la guarda": "el ángel de la guarda",
-  "la salid y": "la salud y"
+  "la salid y": "la salud y",
+  "contando mí colegio": "contando mi colegio"
  }
 }
