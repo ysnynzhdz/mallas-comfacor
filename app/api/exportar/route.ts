@@ -65,7 +65,9 @@ export async function GET(req: NextRequest) {
   const subjName = asignatura ? (subj ?? []).find((x) => x.id === asignatura)?.name : null;
   const parts = [area.name, gName, period ? period.name : null, subjName, String(year.year)].filter(Boolean) as string[];
   const fold = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  const { data: settings } = await s.from("institution_settings").select("student_sheet").maybeSingle();
   const out: ExportData = {
+    sheet: (settings?.student_sheet ?? undefined) as ExportData["sheet"],
     title: `Malla curricular · ${parts.join(" · ")}`,
     area: area.name,
     year: year.year,

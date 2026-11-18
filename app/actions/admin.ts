@@ -171,3 +171,15 @@ export async function activarVigencia(_: ActionState, formData: FormData): Promi
   revalidatePath("/", "layout");
   return { ok: `La vigencia ${year} quedó como vigente.` };
 }
+
+// ---------- Formato de la malla para estudiantes ----------
+export async function guardarFormatoEstudiantes(_: ActionState, formData: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const keys = ["titulo", "lema_anio", "lema", "subtitulo", "documento", "ciudad", "nota"];
+  const sheet = Object.fromEntries(keys.map((k) => [k, String(formData.get(k) ?? "").trim().slice(0, 400)]));
+  const supabase = await createClient();
+  const { error } = await supabase.from("institution_settings").update({ student_sheet: sheet, updated_at: new Date().toISOString() }).eq("id", true);
+  if (error) return { error: friendly(error.message) };
+  revalidatePath("/admin/formato");
+  return { ok: "Formato guardado. Las próximas descargas usarán estos textos." };
+}

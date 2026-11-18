@@ -18,6 +18,7 @@ export function AppHeader({ profile, unread }: { profile: Profile; unread: numbe
     { href: "/admin/importaciones", label: "Importaciones" },
     { href: "/admin/docentes", label: "Docentes" },
     { href: "/admin/vigencias", label: "Vigencias" },
+    { href: "/admin/formato", label: "Formato para estudiantes" },
   ];
   const first = (profile.full_name || profile.email).split(" ")[0];
   return (
