@@ -5,7 +5,7 @@ do $t$
 declare
   adm uuid := gen_random_uuid(); d1 uuid := gen_random_uuid(); d2 uuid := gen_random_uuid(); d3 uuid := gen_random_uuid();
   v_area uuid; v_year uuid; v_plan uuid; v_proj uuid; v_row uuid; v_req uuid; v_req2 uuid; n int; ok text := ''; res text := '';
-  snap jsonb; v_ver uuid;
+  snap jsonb; v_ver uuid; v_proj2 uuid;
   procedure_dummy int;
 begin
   -- Usuarios de prueba (el primero se vuelve administrador)
@@ -13,11 +13,12 @@ begin
   insert into auth.users (id, email, aud, role, raw_user_meta_data) values (d1, 'd1@prueba.test', 'authenticated', 'authenticated', '{"full_name":"Docente Uno"}');
   insert into auth.users (id, email, aud, role) values (d2, 'd2@prueba.test', 'authenticated', 'authenticated');
   insert into auth.users (id, email, aud, role) values (d3, 'd3@prueba.test', 'authenticated', 'authenticated');
-  select role::text || '/' || active into ok from public.profiles where id = adm; res := res || '1 primer usuario=' || ok || ' (esperado admin/true); ';
+  select role::text || '/' || active into ok from public.profiles where id = adm; res := res || '1 cuenta nueva con admin existente=' || ok || ' (esperado docente/false); ';
+  update public.profiles set role = 'admin', active = true where id = adm;   -- administrador de prueba
   select role::text || '/' || active into ok from public.profiles where id = d1; res := res || '2 cuenta nueva=' || ok || ' (esperado docente/false); ';
   update public.profiles set active = true where id in (d1, d2);
   select id into v_area from public.areas where slug = 'filosofia';
-  select id into v_year from public.academic_years where year = 2024;
+  insert into public.academic_years (year, status) values (2098, 'vigente') returning id into v_year;   -- vigencia de prueba
   insert into public.teacher_area_assignments (teacher_id, area_id) values (d1, v_area);
   insert into public.curriculum_plans (area_id, academic_year_id, status) values (v_area, v_year, 'importada') returning id into v_plan;
   insert into public.projects (plan_id, grade_id, period_id, name, columns)
@@ -123,6 +124,56 @@ begin
   begin perform public.approve_change_request(v_req2, null, false); res := res || '27 conflicto=NO DETECTADO (MAL); ';
   exception when others then res := res || '27 conflicto=detectado (bien); '; end;
   execute 'reset role';
+
+
+  -- ===== Pruebas nuevas (Etapas 3 y 4) =====
+  -- Buscador: el docente solo encuentra mallas publicadas
+  insert into public.curriculum_plans (area_id, academic_year_id, status)
+    values ((select id from public.areas where slug='religion'), v_year, 'importada') returning id into v_plan;
+  insert into public.projects (plan_id, grade_id, period_id, name, columns)
+    values (v_plan, (select id from public.grades where slug='noveno'), (select id from public.periods where number=1), 'Oculta',
+            '[{"key":"c1","label":"CONTENIDOS","category":"contenido"}]') returning id into v_proj2;
+  insert into public.curriculum_rows (project_id, position, cells) values (v_proj2, 1, '{"c1":"Palabraclavesecreta en borrador"}');
+  perform set_config('request.jwt.claims', json_build_object('sub', d1, 'role', 'authenticated')::text, true);
+  execute 'set local role authenticated';
+  select count(*) into n from public.search_curriculum('palabraclavesecreta', 2098); res := res || '28 docente encuentra borrador=' || n || ' (esperado 0); ';
+  select count(*) into n from public.search_curriculum('texto original', 2098); res := res || '29 docente encuentra publicada=' || n || ' (esperado >=1); ';
+  begin perform public.import_plan('religion', 2098, '{"projects":[]}'::jsonb, true); res := res || '30 docente importa=PERMITIDO (MAL); ';
+  exception when others then res := res || '30 docente importa=bloqueado (bien); '; end;
+  begin perform public.publish_imported_plan(v_plan, null); res := res || '31 docente publica=PERMITIDO (MAL); ';
+  exception when others then res := res || '31 docente publica=bloqueado (bien); '; end;
+  begin perform public.duplicate_year(2098, 2099); res := res || '32 docente copia vigencia=PERMITIDO (MAL); ';
+  exception when others then res := res || '32 docente copia vigencia=bloqueado (bien); '; end;
+  begin perform public.set_current_year(2098); res := res || '33 docente activa vigencia=PERMITIDO (MAL); ';
+  exception when others then res := res || '33 docente activa vigencia=bloqueado (bien); '; end;
+  begin perform public.restore_version(v_ver, null); res := res || '34 docente restaura=PERMITIDO (MAL); ';
+  exception when others then res := res || '34 docente restaura=bloqueado (bien); '; end;
+  select count(*) into n from public.import_jobs; res := res || '35 docente ve importaciones=' || n || ' (esperado 0); ';
+  select count(*) into n from public.audit_logs; res := res || '36 docente ve auditoría=' || n || ' (esperado 0); ';
+  execute 'reset role';
+  perform set_config('request.jwt.claims', json_build_object('sub', adm, 'role', 'authenticated')::text, true);
+  execute 'set local role authenticated';
+  select count(*) into n from public.search_curriculum('palabraclavesecreta', 2098); res := res || '37 admin encuentra borrador=' || n || ' (esperado 1); ';
+  -- Copiar vigencia: solo copia lo publicado y enlaza filas de origen
+  n := public.duplicate_year(2098, 2099); res := res || '38 áreas copiadas=' || n || ' (esperado 1: solo la publicada); ';
+  execute 'reset role';
+  select count(*) into n from public.curriculum_rows r join public.projects p on p.id = r.project_id join public.curriculum_plans c on c.id = p.plan_id
+    join public.academic_years y on y.id = c.academic_year_id where y.year = 2099 and r.origin_row_id is not null;
+  res := res || '39 filas copiadas con origen=' || n || ' (esperado 1); ';
+  select c.status::text into ok from public.curriculum_plans c join public.academic_years y on y.id = c.academic_year_id where y.year = 2099;
+  res := res || '40 copia queda=' || ok || ' (esperado en_revision); ';
+  perform set_config('request.jwt.claims', json_build_object('sub', adm, 'role', 'authenticated')::text, true);
+  execute 'set local role authenticated';
+  begin perform public.set_current_year(2099); res := res || '41 activar con borradores=PERMITIDO (MAL); ';
+  exception when others then res := res || '41 activar con borradores=bloqueado (bien); '; end;
+  -- No se puede reemplazar una malla publicada desde el importador
+  begin perform public.import_plan('filosofia', 2098, '{"sha256":"x","projects":[]}'::jsonb, true); res := res || '42 reemplazar publicada=PERMITIDO (MAL); ';
+  exception when others then res := res || '42 reemplazar publicada=bloqueado (bien); '; end;
+  execute 'reset role';
+  -- Nombre propuesto: deja de estar marcado cuando se aprueba otro nombre
+  update public.projects set name_is_proposed = true where id = v_proj;
+  update public.projects set name = 'Nombre aprobado' where id = v_proj;
+  select name_is_proposed::text into ok from public.projects where id = v_proj; res := res || '43 nombre propuesto tras cambio=' || ok || ' (esperado false); ';
 
   raise exception 'RESULTADOS: %', res;
 end $t$;
