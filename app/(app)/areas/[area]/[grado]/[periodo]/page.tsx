@@ -87,8 +87,8 @@ export default async function PeriodoPage({
       )}
       {project.name_is_proposed && (
         <p className="mb-4 rounded-lg bg-sky-50 p-3 text-sm text-sky-900">
-          ℹ️ El documento original no traía nombre para esta unidad. El nombre que aparece fue <strong>propuesto</strong> a partir de su
-          contenido durante la revisión; puede cambiarse con una solicitud.
+          ℹ️ El nombre de esta unidad fue <strong>propuesto</strong> a partir de su contenido durante la revisión, porque el documento original
+          no traía nombre o traía uno genérico. Puede cambiarse con una solicitud.
         </p>
       )}
       <ProjectHeader
