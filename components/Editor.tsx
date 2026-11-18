@@ -155,7 +155,7 @@ export function Editor({ initial, projectId, requestId, backTo, cancelHref, mode
         </p>
       )}
 
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white/95 p-3 shadow-lg backdrop-blur">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-linea bg-white/95 p-3 shadow-lg backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2">
           {mode === "propuesta" ? (
             <>

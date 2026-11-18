@@ -41,13 +41,13 @@ export default async function AreaPage({
                   {has ? (
                     <Link
                       href={`/areas/${area.slug}/${g.slug}${vq}`}
-                      className="flex min-h-16 flex-col items-center justify-center rounded-xl bg-white p-3 text-center font-bold shadow-sm ring-1 ring-slate-200 hover:ring-2 hover:ring-institucional"
+                      className="flex min-h-16 flex-col items-center justify-center rounded-lg bg-white p-3 text-center font-bold ring-1 ring-slate-200 hover:ring-2 hover:ring-institucional"
                     >
                       <span className="text-xl">{g.short_name}</span>
                       <span className="text-sm text-slate-600">{g.name}</span>
                     </Link>
                   ) : (
-                    <div className="flex min-h-16 flex-col items-center justify-center rounded-xl bg-slate-100 p-3 text-center text-slate-400">
+                    <div className="flex min-h-16 flex-col items-center justify-center rounded-lg bg-slate-100 p-3 text-center text-slate-400">
                       <span className="text-xl font-bold">{g.short_name}</span>
                       <span className="text-xs">Sin malla registrada</span>
                     </div>

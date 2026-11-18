@@ -8,9 +8,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <>
       <AppHeader profile={profile} unread={unread} />
-      <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
-      <footer className="mx-auto max-w-7xl px-4 pb-8 text-center text-xs text-slate-500">
-        Institución Educativa COMFACOR Jaime Exbrayat · Montería, Córdoba
+      <main className="mx-auto min-h-[70vh] max-w-7xl px-4 py-8">{children}</main>
+      <footer className="border-t border-linea">
+        <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-2 px-4 py-5 text-xs text-slate-500">
+          <span>Institución Educativa COMFACOR Jaime Exbrayat, Montería (Córdoba)</span>
+          <span>Mallas curriculares institucionales</span>
+        </div>
       </footer>
     </>
   );

@@ -1,23 +1,50 @@
 @import "tailwindcss";
 
-/* Propuesta visual provisional (se ajustará con los colores oficiales de COMFACOR) */
+/*
+ * Identidad visual provisional de MALLAS COMFACOR (se ajusta cuando lleguen el logo y los colores oficiales).
+ * Tinta: azul institucional · Sinú: verde azulado de acción · Caña: fibra del sombrero vueltiao (solo en la franja).
+ */
 @theme {
-  --color-institucional: #1e3a8a;
-  --color-institucional-claro: #e8eefb;
-  --color-accion: #15803d;
-  --color-accion-oscuro: #166534;
-  --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-tinta: #14213d;
+  --color-tinta-suave: #2b3a5c;
+  --color-institucional: #14213d;
+  --color-institucional-claro: #e9eef7;
+  --color-accion: #0b6e6e;
+  --color-accion-oscuro: #085454;
+  --color-sinu-claro: #e3f1f0;
+  --color-cana: #e8dcc0;
+  --color-papel: #f5f7fa;
+  --color-linea: #d9dee7;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-condensed: "IBM Plex Sans Condensed", "IBM Plex Sans", "Arial Narrow", sans-serif;
 }
 
 html { font-size: 16px; }
-body { @apply bg-slate-50 text-slate-900 antialiased; }
+body { @apply bg-papel text-slate-900 antialiased; font-feature-settings: "kern"; }
+h1, h2, h3 { letter-spacing: -0.01em; text-wrap: balance; }
+:focus-visible { outline: 3px solid #0b6e6e; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 min-h-11 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed; }
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-md px-4 min-h-11 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed; }
 @utility btn-primario { @apply btn bg-accion text-white hover:bg-accion-oscuro; }
-@utility btn-secundario { @apply btn border border-slate-300 bg-white text-slate-800 hover:bg-slate-100; }
+@utility btn-secundario { @apply btn border border-linea bg-white text-tinta hover:border-tinta-suave hover:bg-institucional-claro; }
 @utility btn-peligro { @apply btn bg-red-700 text-white hover:bg-red-800; }
-@utility btn-institucional { @apply btn bg-institucional text-white hover:opacity-90; }
-@utility campo { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base focus:border-institucional focus:outline-none focus:ring-2 focus:ring-institucional/30; }
-@utility etiqueta { @apply mb-1 block text-sm font-semibold text-slate-700; }
-@utility tarjeta { @apply rounded-xl border border-slate-200 bg-white p-5 shadow-sm; }
+@utility btn-institucional { @apply btn bg-tinta text-white hover:bg-tinta-suave; }
+@utility campo { @apply w-full rounded-md border border-linea bg-white px-3 py-2 text-base text-slate-900 placeholder:text-slate-400 focus:border-accion focus:outline-none focus:ring-2 focus:ring-accion/25; }
+@utility etiqueta { @apply mb-1 block text-sm font-semibold text-tinta-suave; }
+@utility tarjeta { @apply rounded-lg border border-linea bg-white p-5; }
 @utility texto-celda { white-space: pre-wrap; overflow-wrap: anywhere; }
+@utility condensada { font-family: var(--font-condensed); }
+
+/* Franja tejida inspirada en las "pintas" del sombrero vueltiao (Córdoba) */
+@utility franja-vueltiao {
+  height: 10px;
+  background-color: var(--color-cana);
+  background-image:
+    linear-gradient(135deg, var(--color-tinta) 25%, transparent 25%),
+    linear-gradient(225deg, var(--color-tinta) 25%, transparent 25%),
+    linear-gradient(315deg, var(--color-tinta) 25%, transparent 25%),
+    linear-gradient(45deg, var(--color-tinta) 25%, transparent 25%);
+  background-size: 20px 10px;
+  background-position: 0 0, 0 0, 10px 0, 10px 0;
+}

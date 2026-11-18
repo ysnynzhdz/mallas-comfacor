@@ -45,7 +45,7 @@ export function DiffView({
       </div>
       {nothing && <p className="tarjeta">No hay diferencias con la versión publicada.</p>}
       {d.fields.map((f, i) => (
-        <section key={i} className="tarjeta border-l-8 border-l-amber-400">
+        <section key={i} className="tarjeta border-l-4 border-l-amber-400">
           <h3 className="mb-2 font-bold">{f.label}</h3>
           <Cambio before={f.before} after={f.after} l={l} />
         </section>
@@ -55,7 +55,7 @@ export function DiffView({
         .map((r, i) => (
           <section
             key={i}
-            className={`tarjeta border-l-8 ${
+            className={`tarjeta border-l-4 ${
               r.kind === "agregada" ? "border-l-green-500" : r.kind === "eliminada" ? "border-l-red-500" : "border-l-amber-400"
             }`}
           >

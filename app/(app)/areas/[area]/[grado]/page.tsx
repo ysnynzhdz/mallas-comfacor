@@ -41,8 +41,8 @@ export default async function GradoPage({
           const p = all[0];
           if (all.length > 1) {
             return (
-              <li key={pe.id} className="flex h-full flex-col gap-2 rounded-xl border-t-8 bg-white p-5 shadow-sm" style={{ borderTopColor: area.color }}>
-                <span className="text-sm font-bold uppercase text-slate-500">{pe.name}</span>
+              <li key={pe.id} className="flex h-full flex-col gap-2 rounded-lg border-t-4 border-x border-b border-linea bg-white p-5" style={{ borderTopColor: area.color }}>
+                <span className="text-sm font-semibold text-slate-500">{pe.name}</span>
                 {all.map((x) => {
                   const sub = subjects.find((s) => s.id === x.subject_id);
                   const q = new URLSearchParams();
@@ -50,7 +50,7 @@ export default async function GradoPage({
                   if (x.subject_id) q.set("asignatura", x.subject_id);
                   return (
                     <Link key={x.id} href={`/areas/${area.slug}/${grade.slug}/${pe.number}?${q}`} className="rounded-lg bg-slate-50 p-2 hover:bg-institucional-claro">
-                      <span className="block text-xs font-bold uppercase text-institucional">{sub?.name ?? "General"}</span>
+                      <span className="block text-xs font-semibold text-institucional">{sub?.name ?? "General"}</span>
                       <span className="text-sm font-semibold leading-snug">{x.name || "(Sin nombre en el documento)"}</span>
                     </Link>
                   );
@@ -63,18 +63,18 @@ export default async function GradoPage({
               {p ? (
                 <Link
                   href={`/areas/${area.slug}/${grade.slug}/${pe.number}${vq}`}
-                  className="flex h-full flex-col rounded-xl border-t-8 bg-white p-5 shadow-sm hover:shadow-md"
+                  className="flex h-full flex-col rounded-lg border-t-4 border-x border-b border-linea bg-white p-5 hover:border-tinta-suave"
                   style={{ borderTopColor: area.color }}
                 >
-                  <span className="text-sm font-bold uppercase text-slate-500">{pe.name}</span>
+                  <span className="text-sm font-semibold text-slate-500">{pe.name}</span>
                   <span className="mt-1 text-xs font-semibold text-slate-500">
                     {p.label} {p.number_text}
                   </span>
                   <span className="mt-1 text-lg font-bold leading-snug">{p.name || "(Sin nombre en el documento)"}</span>
                 </Link>
               ) : (
-                <div className="rounded-xl bg-slate-100 p-5 text-slate-500">
-                  <span className="text-sm font-bold uppercase">{pe.name}</span>
+                <div className="rounded-lg bg-slate-100 p-5 text-slate-500">
+                  <span className="text-sm font-semibold">{pe.name}</span>
                   <p className="mt-1">No existe una malla registrada para este período.</p>
                 </div>
               )}

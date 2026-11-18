@@ -12,7 +12,7 @@ import type { Plan } from "@/lib/types";
 const NIVEL: Record<string, string> = {
   error: "bg-red-50 text-red-900 border-red-300",
   advertencia: "bg-amber-50 text-amber-900 border-amber-300",
-  info: "bg-slate-50 text-slate-700 border-slate-200",
+  info: "bg-slate-50 text-slate-700 border-linea",
 };
 
 export default async function RevisarImportacion({
@@ -70,7 +70,7 @@ export default async function RevisarImportacion({
 
       <h2 className="mb-2 text-lg font-bold">1. Grados y períodos encontrados</h2>
       <p className="mb-3 text-sm text-slate-600">Abra cada uno para revisar la vista previa y, si hace falta, corregir errores de importación.</p>
-      <div className="mb-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="mb-6 overflow-x-auto rounded-lg border border-linea bg-white">
         <table className="w-full text-sm">
           <thead className="bg-slate-100"><tr><th className="p-2 text-left">Grado</th>{periods.map((p) => <th key={p.id} className="p-2 text-left">{p.name}</th>)}</tr></thead>
           <tbody>
@@ -120,7 +120,7 @@ export default async function RevisarImportacion({
           .sort((a, b) => ["error", "advertencia", "info"].indexOf(a.nivel) - ["error", "advertencia", "info"].indexOf(b.nivel))
           .map((a, i) => (
             <li key={i} className={`rounded-lg border p-3 text-sm ${NIVEL[a.nivel] ?? ""}`}>
-              <strong className="uppercase">{a.nivel}</strong> · {a.ubicacion}: {a.mensaje}
+              <strong className="capitalize">{a.nivel}</strong> · {a.ubicacion}: {a.mensaje}
             </li>
           ))}
       </ul>

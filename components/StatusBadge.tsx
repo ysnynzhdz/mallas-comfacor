@@ -17,7 +17,7 @@ export function StatusBadge({ plan, request }: { plan?: PlanStatus; request?: Re
   const key = plan ?? request ?? "borrador";
   const label = plan ? PLAN_STATUS_LABEL[plan] : REQUEST_STATUS_LABEL[request!];
   return (
-    <span className={`inline-block rounded-full px-3 py-1 text-xs font-bold ${COLORS[key] ?? "bg-slate-200"}`}>
+    <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${COLORS[key] ?? "bg-slate-200"}`}>
       {label}
     </span>
   );

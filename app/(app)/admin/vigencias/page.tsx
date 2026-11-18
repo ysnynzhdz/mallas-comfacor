@@ -24,7 +24,7 @@ export default async function Vigencias() {
         Cada año escolar es una vigencia. Para preparar un año nuevo se copia la vigencia anterior como borrador; las mallas copiadas se
         revisan y se publican, y al final se activa la nueva vigencia. La vigencia anterior queda archivada y se puede consultar y comparar.
       </p>
-      <div className="mb-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="mb-6 overflow-x-auto rounded-lg border border-linea bg-white">
         <table className="w-full text-sm">
           <thead className="bg-slate-100 text-left">
             <tr><th className="p-3">Vigencia</th><th className="p-3">Estado</th><th className="p-3">Mallas publicadas</th><th className="p-3">En revisión</th><th className="p-3"></th></tr>

@@ -27,7 +27,7 @@ export default async function Solicitudes({ searchParams }: { searchParams: Prom
             const c = contextOf(r);
             return (
               <li key={r.id}>
-                <Link href={`/admin/solicitudes/${r.id}`} className="tarjeta block border-l-8 hover:shadow-md" style={{ borderLeftColor: c.color }}>
+                <Link href={`/admin/solicitudes/${r.id}`} className="tarjeta block border-l-4 hover:border-tinta-suave" style={{ borderLeftColor: c.color }}>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-bold">{c.text}</span>
                     <StatusBadge request={r.status} />

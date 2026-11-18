@@ -40,9 +40,9 @@ export default async function Notificaciones() {
       ) : (
         <ul className="space-y-2">
           {list.map((n) => (
-            <li key={n.id} className={`tarjeta p-4 ${n.read_at ? "opacity-70" : "border-l-8 border-l-institucional"}`}>
+            <li key={n.id} className={`tarjeta p-4 ${n.read_at ? "opacity-70" : "border-l-4 border-l-institucional"}`}>
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                <span className="font-bold uppercase">{TIPO[n.type] ?? n.type}</span>
+                <span className="font-semibold">{TIPO[n.type] ?? n.type}</span>
                 {n.area && <span>· {n.area.name}</span>}
                 <span>· {fecha(n.created_at)}</span>
                 {!n.read_at && <span className="rounded bg-red-100 px-2 font-bold text-red-800">Sin leer</span>}

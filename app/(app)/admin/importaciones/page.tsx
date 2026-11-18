@@ -32,7 +32,7 @@ export default async function Importaciones() {
           <ul className="grid gap-2 md:grid-cols-3">
             {pendingCopies.map((c) => (
               <li key={c.id}>
-                <Link href={`/admin/importaciones/${c.id}`} className="tarjeta flex items-center justify-between gap-2 hover:shadow-md">
+                <Link href={`/admin/importaciones/${c.id}`} className="tarjeta flex items-center justify-between gap-2 hover:border-tinta-suave">
                   <span className="font-semibold">{c.area.name} · {c.year.year}</span>
                   <StatusBadge plan={c.status} />
                 </Link>
@@ -54,7 +54,7 @@ export default async function Importaciones() {
             const warns = j.alerts.filter((a) => a.nivel === "advertencia").length;
             return (
               <li key={j.id}>
-                <Link href={`/admin/importaciones/${j.plan_id}`} className="tarjeta block hover:shadow-md">
+                <Link href={`/admin/importaciones/${j.plan_id}`} className="tarjeta block hover:border-tinta-suave">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-bold">{j.plan?.area.name} · {j.plan?.year.year}</span>
                     {j.plan && <StatusBadge plan={j.plan.status} />}

@@ -102,7 +102,7 @@ export default async function Panel({ searchParams }: { searchParams: Promise<{ 
       <ul className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {cards.map((c) => (
           <li key={c.label} className="tarjeta text-center">
-            <p className="text-3xl font-black text-institucional">{c.value}</p>
+            <p className="text-3xl font-semibold text-institucional">{c.value}</p>
             <p className="text-sm font-semibold text-slate-600">{c.href ? <Link href={c.href} className="underline">{c.label}</Link> : c.label}</p>
           </li>
         ))}
@@ -143,7 +143,7 @@ export default async function Panel({ searchParams }: { searchParams: Promise<{ 
           ))}
         </nav>
       </div>
-      <div className="mb-8 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div className="mb-8 overflow-x-auto rounded-lg border border-linea bg-white">
         <table className="w-full text-sm">
           <thead className="bg-slate-100 text-left">
             <tr>

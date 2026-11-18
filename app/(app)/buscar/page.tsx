@@ -158,7 +158,7 @@ export default async function Buscar({
           return (
             <li key={key} className="tarjeta border-l-8" style={{ borderLeftColor: a?.color }}>
               <Link href={linkTo(hit)} className="block hover:underline">
-                <span className="text-xs font-bold uppercase text-slate-500">
+                <span className="text-xs font-semibold text-slate-500">
                   {a?.name} · {g?.name} · Período {hit.period_number} · {hit.label} {hit.number_text}
                 </span>
                 <span className="block text-lg font-bold leading-snug">{head ? <Hl pieces={snippet(hit.name, stems, 200) ?? [{ text: hit.name, hit: false }]} /> : hit.name || "(Sin nombre)"}</span>

@@ -15,25 +15,25 @@ export function CurriculumTable({ columns, rows }: { columns: Column[]; rows: Ro
   return (
     <>
       {/* Computador y tableta */}
-      <div className="hidden overflow-x-auto rounded-xl border border-slate-300 bg-white md:block">
+      <div className="hidden max-h-[80vh] overflow-auto rounded-lg border border-linea bg-white md:block">
         <table className="w-full border-collapse text-sm">
-          <thead className="bg-institucional text-white">
+          <thead className="condensada sticky top-0 z-10 bg-tinta text-white">
             {hasGroups && (
               <tr>
                 {groups.map((g, i) =>
                   g.label ? (
-                    <th key={i} colSpan={g.span} className="border border-white/30 px-3 py-2 text-center font-bold">
+                    <th key={i} colSpan={g.span} className="border border-white/20 px-3 py-2 text-center text-xs font-semibold tracking-wide">
                       {g.label}
                     </th>
                   ) : (
-                    <th key={i} colSpan={g.span} className="border border-white/30" />
+                    <th key={i} colSpan={g.span} className="border border-white/20" />
                   ),
                 )}
               </tr>
             )}
             <tr>
               {columns.map((c) => (
-                <th key={c.key} className="border border-white/30 px-3 py-2 text-left align-bottom font-bold">
+                <th key={c.key} className="border border-white/20 px-3 py-2.5 text-left align-bottom text-[0.8rem] font-semibold leading-tight">
                   {c.label}
                 </th>
               ))}
@@ -41,14 +41,14 @@ export function CurriculumTable({ columns, rows }: { columns: Column[]; rows: Ro
           </thead>
           <tbody>
             {layout.map((cells, ri) => (
-              <tr key={rows[ri].id ?? ri} className="even:bg-slate-50">
+              <tr key={rows[ri].id ?? ri} className="even:bg-papel">
                 {cells.map((cell) =>
                   cell.kind === "cell" ? (
                     <td
                       key={cell.key}
                       rowSpan={cell.rowSpan}
                       colSpan={cell.colSpan}
-                      className="texto-celda border border-slate-300 px-3 py-2 align-top"
+                      className="texto-celda border border-linea px-3 py-2.5 align-top leading-relaxed"
                     >
                       {cell.text}
                     </td>
@@ -64,7 +64,7 @@ export function CurriculumTable({ columns, rows }: { columns: Column[]; rows: Ro
       <ol className="space-y-3 md:hidden">
         {layout.map((cells, ri) => (
           <li key={rows[ri].id ?? ri} className="tarjeta p-4">
-            <p className="mb-2 text-xs font-bold uppercase text-slate-500">Fila {ri + 1}</p>
+            <p className="mb-2 text-xs font-semibold text-slate-500">Fila {ri + 1}</p>
             <dl className="space-y-3">
               {cells.map((cell) => {
                 const text =
@@ -73,7 +73,7 @@ export function CurriculumTable({ columns, rows }: { columns: Column[]; rows: Ro
                     : (layout[cell.originRow].find((c) => c.kind === "cell" && c.key === cell.key) as { text: string } | undefined)?.text ?? "";
                 return (
                   <div key={cell.key}>
-                    <dt className="text-xs font-bold text-institucional">{label(cell.key)}</dt>
+                    <dt className="condensada text-xs font-semibold text-accion-oscuro">{label(cell.key)}</dt>
                     <dd className="texto-celda text-sm">
                       {text || <span className="text-slate-400">(vacío)</span>}
                       {cell.kind === "covered" && (

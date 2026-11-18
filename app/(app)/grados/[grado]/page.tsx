@@ -66,7 +66,7 @@ export default async function GradoConsolidado({
           return (
             <details key={a.id} className="tarjeta border-l-8" style={{ borderLeftColor: a.color }}>
               <summary className="cursor-pointer list-none">
-                <span className="text-xs font-bold uppercase text-slate-500">{a.name}</span>
+                <span className="text-xs font-semibold text-slate-500">{a.name}</span>
                 {list.map((p) => (
                   <span key={p.id} className="block font-bold leading-snug">
                     {p.subject_id && <span className="text-institucional">{(subjData ?? []).find((x) => x.id === p.subject_id)?.name}: </span>}
